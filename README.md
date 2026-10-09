@@ -144,3 +144,38 @@ Decisões de projeto:
 `filtrar(corpos, tipo, temp_min, temp_max)` percorre a lista e descarta o corpo que falha em algum critério informado. Todos os critérios são opcionais, e o corpo precisa passar por todos os que foram informados. O custo é O(n).
 
 O tipo deve ser digitado como a API devolve (`Moon`, `Planet`, `Asteroid`, `Comet`, `Dwarf Planet`, `Star`). A temperatura é em Kelvin.
+
+
+## Analise Amortizada
+
+Sendo *L* o tamanho da palavra a ser inserida e *c* o número de novos nós criados (0 <= c <= L), temos que:
+
+Custo da inserção = L + 128c
+
+Temos o **pior caso** quando a chave inteira é nova, ou seja, c = L:
+
+Custo do pior caso = L + 128L = 129L
+
+Supondo que todas inserções caiam nesse caso, então para m inserções temos:
+
+T = m * 129L_max
+
+Cada nó criado corresponde a um caractere na chave, então c <= L em cada inserção e, somando, Σc <= ΣL. Além disso, à medida que mais inserções são feitas na Trie, menor é o número de novos nós que precisam ser criados.
+
+T(x) = ΣL + 128 * Σc
+
+Aplicando Σc <= ΣL:
+
+T(x) <= ΣL + 128ΣL = 129ΣL
+
+Custo amortizado (x inserções):
+
+ĉ <= 129ΣL / x
+
+Sendo o tamanho médio da palavra inserida L' = ΣL / x, temos que:
+
+ĉ <= 129L'
+
+Consequentemente, o custo amortizado é O(L'), onde L' é o tamanho médio da palavra.
+
+Como ΣL <= m * L_max, o custo 129ΣL nunca é maior que o pior caso, e é bem menor quando as chaves compartilham prefixos. Por isso, o pior caso por inserção é conservador para uma sequência de inserções.
